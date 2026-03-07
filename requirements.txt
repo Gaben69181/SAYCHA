@@ -1,0 +1,7 @@
+pytchat==1.5.7
+streamlit==1.28.1
+transformers==4.38.1
+torch==2.1.2
+pandas==2.1.4
+matplotlib==3.8.2
+regex==2023.12.25
