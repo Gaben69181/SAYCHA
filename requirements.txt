@@ -1,4 +1,4 @@
-pytchat==1.5.7
+pytchat==1.5
 streamlit==1.28.1
 transformers==4.38.1
 torch==2.1.2
