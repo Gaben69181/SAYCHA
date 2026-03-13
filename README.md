@@ -280,14 +280,41 @@ Total:    205
 
 ### Sentiment Analysis Model
 
-**Model Used:** `distilbert-base-uncased-finetuned-sst-2-english`
+#### Current Model: Custom Fine-Tuned DistilBERT
 
+The application now uses a **custom fine-tuned DistilBERT model** trained on Twitter sentiment data for improved performance.
+
+**Model Location:** `./fine_tuned_distilbert_sentiment/`
+
+**Training Details:**
+- **Base Model:** distilbert-base-uncased
+- **Dataset:** Kaggle - Twitter Entity Sentiment Analysis (74,681 samples)
+- **Training Split:** 80% training, 10% validation, 10% test (stratified)
+- **Epochs:** 3
+- **Batch Size:** 16
+- **Learning Rate:** 2e-5
+- **Max Sequence Length:** 128
+- **Optimizer:** AdamW with weight decay (0.01)
+- **Scheduler:** Linear warmup (500 steps)
+
+**Model Performance:**
+- **Test Accuracy:** 90.2%
+- **Test Precision:** 0.902
+- **Test Recall:** 0.902
+- **Test F1-Score:** 0.902
+
+**Model Specs:**
 - **Type:** DistilBERT (Distilled BERT)
-- **Task:** Binary sentiment classification (originally) → mapped to 3 classes
+- **Task:** Sequence classification for sentiment analysis
 - **Dimension:** 768 hidden dimensions
 - **Parameters:** ~66 million
 - **Size:** ~250 MB
 - **Speed:** ~100-500 messages/second (depending on hardware)
+- **Device:** Automatically uses CUDA (GPU) if available, falls back to CPU
+
+#### Fallback Model
+If the fine-tuned model is not available, the application automatically uses:
+- **Model:** `distilbert-base-uncased-finetuned-sst-2-english`
 - **Accuracy:** 91% on SST-2 dataset
 
 ### Classification Logic
@@ -401,6 +428,34 @@ pip install pytchat==1.5.7
 
 ---
 
+## 🎓 Model Training (Fine-Tuning)
+
+To train a custom fine-tuned model:
+
+1. **Prepare Training Notebook**
+   - Use `fine_tune_model.ipynb` Jupyter notebook
+   - Requires kagglehub authentication for dataset download
+
+2. **Install Notebook Dependencies**
+   ```bash
+   pip install jupyter kagglehub
+   ```
+
+3. **Run Fine-Tuning**
+   ```bash
+   jupyter notebook fine_tune_model.ipynb
+   ```
+
+4. **Model Export**
+   - Fine-tuned model automatically exports to `./fine_tuned_distilbert_sentiment/`
+   - Includes: model weights, tokenizer, config, and label mappings
+
+5. **Integration**
+   - `sentiment_model.py` automatically detects and loads the fine-tuned model
+   - Falls back to pre-trained model if fine-tuned version unavailable
+
+---
+
 ## 🔒 Privacy & Ethics
 
 - **Data Collection:** Only collects publicly available chat messages from livestreams
@@ -417,7 +472,8 @@ pip install pytchat==1.5.7
 - [ ] User authentication and session persistence
 - [ ] Database integration for historical analysis
 - [ ] Advanced NLP features (topic modeling, emotion detection)
-- [ ] Custom model fine-tuning
+- [x] **Custom model fine-tuning** (Completed - DistilBERT fine-tuned on Twitter sentiment data)
+- [ ] HuggingFace Hub model deployment
 - [ ] API endpoint for integration with other services
 - [ ] Mobile app support
 
@@ -475,6 +531,7 @@ For issues or questions:
 
 ---
 
-**Last Updated:** March 2026  
+**Last Updated:** March 14, 2026  
+**Model Version:** v1.1 (Fine-Tuned DistilBERT)  
 **Python Version:** 3.10+  
-**Status:** ✅ Production Ready
+**Status:** ✅ Production Ready with Custom Fine-Tuned Model
